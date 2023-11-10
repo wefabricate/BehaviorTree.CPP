@@ -160,6 +160,7 @@ target_link_libraries(${BTCPP_LIBRARY}
         Threads::Threads
         ${CMAKE_DL_LIBS}
         $<BUILD_INTERFACE:foonathan::lexy>
+    PUBLIC
         ${BTCPP_EXTRA_LIBRARIES}
 )
 
