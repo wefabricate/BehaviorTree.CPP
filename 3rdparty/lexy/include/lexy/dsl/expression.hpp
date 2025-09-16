@@ -364,15 +364,24 @@ struct _expr : rule_base
                         return false;
                     }
 
+                    #ifdef __GNUC__
+                    #pragma GCC diagnostic push
+                    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+                    #pragma GCC diagnostic ignored "-Werror=maybe-uninitialized"
+                    #endif
                     auto rhs      = LEXY_MOV(context.value);
                     context.value = {};
-
+                    
                     if constexpr (value_type_void)
                         context.value.emplace_result(context.value_callback(),
                                                      LEXY_FWD(op_args)...);
                     else
                         context.value.emplace_result(context.value_callback(), *LEXY_MOV(lhs),
                                                      LEXY_FWD(op_args)..., *LEXY_MOV(rhs));
+
+                    #ifdef __GNUC__
+                    #pragma GCC diagnostic pop
+                    #endif
 
                     if constexpr (std::is_base_of_v<infix_op_single, Operation>)
                     {
@@ -505,6 +514,11 @@ struct _expr : rule_base
             auto result = true;
             while (true)
             {
+                #ifdef __GNUC__
+                #pragma GCC diagnostic push
+                #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+                #pragma GCC diagnostic ignored "-Werror=maybe-uninitialized"
+                #endif
                 auto op = parse_operator<typename op_list::ops>(reader);
                 if (op.idx >= op_list::ops::size)
                 {
@@ -513,6 +527,9 @@ struct _expr : rule_base
                 }
 
                 result = op_list::template apply<_continuation>(context, reader, op, state);
+                #ifdef __GNUC__
+                #pragma GCC diagnostic pop
+                #endif
                 if (!result)
                     break;
             }

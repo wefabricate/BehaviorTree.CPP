@@ -185,7 +185,14 @@ public:
             _begin = pos;
 
             _prev        = handler._top;
+            #ifdef __GNUC__
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wdangling-pointer"
+            #endif
             handler._top = this;
+            #ifdef __GNUC__
+            #pragma GCC diagnostic pop
+            #endif
         }
         constexpr void on(_vh& handler, parse_events::production_finish, iterator)
         {

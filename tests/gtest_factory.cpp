@@ -106,7 +106,8 @@ static const char* xml_text_subtree_part2 = R"(
 TEST(BehaviorTreeFactory, NotRegisteredNode)
 {
   BehaviorTreeFactory factory;
-  ASSERT_ANY_THROW(factory.createTreeFromText(xml_text));
+  auto tree = factory.createTreeFromText(xml_text);
+  ASSERT_ANY_THROW(tree);
   ASSERT_ANY_THROW(std::make_shared<BT::Tree>(factory.createTreeFromText(xml_text)));
 }
 
