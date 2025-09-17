@@ -697,6 +697,11 @@ TreeNode::Ptr XMLParser::PImpl::createNodeFromXML(const XMLElement* element,
             }
             catch(std::exception& ex)
             {
+              // If the port value is empty and the conversion fails, just act as if it was not set
+              if (port_value.empty())
+              {
+                continue;
+              }
               auto msg = StrCat("The port with name \"", port_name, "\" and value \"",
                                 port_value, "\" can not be converted to ",
                                 port_model.typeName());
